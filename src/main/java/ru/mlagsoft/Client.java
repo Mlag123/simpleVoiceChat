@@ -2,23 +2,25 @@ package ru.mlagsoft;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Client {
     private String ip;
     private Socket socket;
     private AudioFormat format;
-    TargetDataLine microphone;
+    private TargetDataLine microphone;
+    private SourceDataLine speakers;
 
 
     public Client(String ip) {
         this.ip = ip;
         format = new AudioFormat(16000f, 16, 1, true, true);
         try {
+            DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
+            speakers = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+            speakers.open(format);
+            speakers.start();
             microphone = AudioSystem.getTargetDataLine(format);
             microphone.open(format);
             microphone.start();
@@ -34,12 +36,44 @@ public class Client {
         try {
             socket = new Socket(ip, Server.getPort());
             OutputStream outputStream = socket.getOutputStream();
+            InputStream inputStream = socket.getInputStream();
 
             byte[] data = new byte[1024];
+            int innumByteRead;
+
+
+         /*   byte[] inData = new byte[1024];
+            numBytesReads = inputStream.read(data);*/
             while (true) {
+
+                //отправка
                 int numbytesread = microphone.read(data, 0, 1024);
                 outputStream.write(data, 0, numbytesread);
                 outputStream.flush();
+                //отправка end
+
+
+
+
+                try {
+                    innumByteRead= inputStream.read(data);
+
+
+
+                    //принятия
+                    speakers.write(data, 0, innumByteRead);
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream((InputStream) speakers);
+                    Clip clip = AudioSystem.getClip();
+
+                    clip.open(audioInputStream);
+                    clip.start();
+                } catch (ClassCastException e) {
+
+                } catch (UnsupportedAudioFileException e) {
+                    throw new RuntimeException(e);
+                } catch (LineUnavailableException e) {
+                    throw new RuntimeException(e);
+                }
 
             }
 
