@@ -16,11 +16,15 @@ public class Server {
        private AudioFormat format = new AudioFormat(16000f, 16, 1, true, true);
     private OutputStream outputStream;
 
-    public Server() {
+    public Server() throws IOException {
 
         //init server;
+        host();
 
+    }
 
+    public static void main(String[] args) throws IOException {
+        new Server();
     }
 
     public static int getPort() {

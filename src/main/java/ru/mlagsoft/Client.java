@@ -79,7 +79,7 @@ public class Client {
 
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"asdas"+e.getMessage());
+       //     JOptionPane.showMessageDialog(null,"asdas"+e.getMessage());
             try {
                 socket.close();
             } catch (IOException ex) {

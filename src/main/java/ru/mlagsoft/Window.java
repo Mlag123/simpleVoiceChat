@@ -19,7 +19,7 @@ public class Window extends JFrame {
 
 
     public Window() {
-        server = new Server();
+     //   server = new Server();
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -75,8 +75,6 @@ public class Window extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
-        new Window();
-    }
+
 
 }
