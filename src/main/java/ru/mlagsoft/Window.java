@@ -18,8 +18,8 @@ public class Window extends JFrame {
     private JLayeredPane layeredPane = new JLayeredPane();
 
 
-    public Window() {
-     //   server = new Server();
+    public Window() throws IOException {
+        server = new Server();
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,7 +52,7 @@ public class Window extends JFrame {
                     @Override
                     public void run() {
                         try {
-                            server.host();
+                                  server.host();
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -75,6 +75,10 @@ public class Window extends JFrame {
         });
     }
 
+
+   public static void main(String[] args) throws IOException {
+        new Window();
+    }
 
 
 }
